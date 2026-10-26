@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0b17">
+<meta name="description" content="ClipFlow - استوديو مجاني لتنظيم الأفكار وتحويلها إلى محتوى لمنصات التواصل الاجتماعي.">
+<title>ClipFlow — استوديو صناعة المحتوى</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap');
+:root{
+ --bg:#0b0b17;--panel:#131326;--panel2:#191932;--border:#2a2a49;
+ --text:#f3f1ff;--muted:#a3a1c0;--purple:#a78bfa;--pink:#f0abfc;
+ --cyan:#67e8f9;--green:#6ee7b7;--red:#fb7185;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 90% 0%,#29204c 0,transparent 38%),var(--bg);color:var(--text);font-family:Cairo,Arial,sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--purple);outline-offset:2px}
+button:disabled{opacity:.45;cursor:not-allowed}
+.app{max-width:1440px;margin:auto;padding:24px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:25px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:49px;height:49px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,#c4b5fd,#8b5cf6,#ec4899);color:#180d35;font-weight:900;font-size:23px;box-shadow:0 0 32px #8b5cf633}
+.brand h1{font-size:24px;margin:0;letter-spacing:-.5px}
+.brand h1 span{color:var(--purple)}
+.brand p{font-size:11px;color:var(--muted);margin:2px 0 0}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--border);background:var(--panel2);color:var(--text);padding:10px 15px;border-radius:11px;font-size:12px;font-weight:800;transition:.2s}
+.btn:hover{filter:brightness(1.2);transform:translateY(-1px)}
+.btn.primary{border:0;color:#170e2f;background:linear-gradient(100deg,#c4b5fd,#f0abfc)}
+.btn.subtle{background:transparent}
+.btn.danger{color:#fda4af}
+.hero{border:1px solid #3a2e60;background:linear-gradient(110deg,#1e1940,#211832 60%,#17283c);border-radius:23px;padding:clamp(22px,4vw,38px);margin-bottom:22px;position:relative;overflow:hidden}
+.hero:after{content:"✳";position:absolute;font-size:170px;color:#c4b5fd0b;left:5%;top:-48px;pointer-events:none}
+.eyebrow{font-size:11px;color:var(--cyan);font-weight:900;letter-spacing:1px}
+.hero h2{font-size:clamp(25px,4vw,40px);line-height:1.5;margin:9px 0 5px;font-weight:900}
+.gradient{background:linear-gradient(90deg,#c4b5fd,#f0abfc,#67e8f9);color:transparent;background-clip:text}
+.hero p{color:#c4c2df;font-size:13px;line-height:2;max-width:650px;margin:5px 0 0}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.stat{background:#121224;border:1px solid var(--border);border-radius:16px;padding:16px}
+.stat small{display:block;color:var(--muted);font-size:11px}
+.stat strong{display:block;font-size:25px;margin-top:4px;color:var(--purple)}
+.layout{display:grid;grid-template-columns:minmax(280px,.83fr) minmax(0,1.45fr);gap:20px;align-items:start}
+.panel{border:1px solid var(--border);background:rgba(19,19,38,.94);border-radius:19px;overflow:hidden;min-width:0}
+.panel-head{padding:17px 19px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.panel-head h3{font-size:15px;margin:0}
+.panel-body{padding:19px}
+.label{display:block;font-size:12px;font-weight:800;color:#d4d1ef;margin:0 0 8px}
+.field{margin-bottom:17px}
+textarea,input,select{width:100%;background:#0d0d1d;border:1px solid #333353;border-radius:11px;color:var(--text);padding:12px;font-size:13px}
+textarea{resize:vertical;line-height:1.9}
+textarea::placeholder,input::placeholder{color:#696987}
+#idea{min-height:185px}
+.helper{font-size:10px;color:var(--muted);line-height:1.9;margin:6px 0 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.platforms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.platform{position:relative}
+.platform input{position:absolute;opacity:0;pointer-events:none;width:1px}
+.platform label{display:flex;align-items:center;gap:8px;border:1px solid #30304f;border-radius:11px;padding:11px 9px;background:#111123;cursor:pointer;font-size:11px;font-weight:800;transition:.2s}
+.platform input:checked+label{border-color:var(--purple);background:#8b5cf621;box-shadow:inset 0 0 0 1px #a78bfa33}
+.platform label span{font-size:17px}
+.full{width:100%}
+.pill{font-size:10px;padding:5px 9px;border:1px solid #373252;border-radius:20px;color:var(--purple);white-space:nowrap}
+.result-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:15px 19px;border-bottom:1px solid var(--border)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tab{padding:7px 11px;border:1px solid transparent;border-radius:9px;background:transparent;color:var(--muted);font-size:11px;font-weight:800}
+.tab.active{background:#a78bfa1c;border-color:#66528c;color:#d8caff}
+.results{padding:15px;display:grid;gap:13px}
+.result-card{border:1px solid var(--border);border-radius:15px;background:linear-gradient(140deg,#18182e,#111121);overflow:hidden;animation:rise .3s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.card-head{padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #292943}
+.card-title{display:flex;align-items:center;gap:9px;font-size:12px;font-weight:900}
+.card-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:10px;background:#a78bfa19;font-size:16px}
+.card-actions{display:flex;gap:5px;flex-wrap:wrap}
+.icon-btn{border:1px solid #343451;background:#20203a;color:#d7d2f2;border-radius:8px;padding:6px 9px;font-size:11px}
+.icon-btn:hover{border-color:var(--purple)}
+.card-content{padding:16px}
+.post-text{font-size:13px;line-height:2.1;white-space:pre-wrap;overflow-wrap:anywhere;min-height:90px;color:#e8e6f7}
+.card-meta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid #292943;margin-top:13px;padding-top:11px;font-size:10px;color:var(--muted)}
+.card-meta .count{direction:ltr}
+.empty{text-align:center;padding:45px 15px;color:var(--muted)}
+.empty .big{font-size:39px;margin-bottom:10px}
+.empty h4{font-size:15px;color:var(--text);margin:0 0 5px}
+.empty p{font-size:12px;line-height:2;margin:0}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:21px}
+.saved-list{display:grid;gap:8px}
+.saved-item{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--border);padding:11px;border-radius:11px}
+.saved-info{min-width:0}
+.saved-info strong{display:block;font-size:12px;overflow-wrap:anywhere}
+.saved-info small{display:block;font-size:10px;color:var(--muted);margin-top:4px}
+.saved-actions{display:flex;gap:5px;flex-shrink:0}
+.mini{border:1px solid var(--border);background:#20203a;color:var(--text);border-radius:8px;padding:6px 8px;font-size:10px}
+.toast{position:fixed;bottom:20px;left:15px;right:15px;margin:auto;max-width:360px;z-index:99;display:none;padding:13px 16px;background:#d1fae5;color:#064e3b;border-radius:12px;font-size:12px;font-weight:900;text-align:center;box-shadow:0 10px 40px #0005}
+.footer{text-align:center;padding:25px 5px;color:#777693;font-size:10px;line-height:2}
+@media(min-width:1100px){.left-panel{position:sticky;top:15px}}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.left-panel{position:static}.bottom-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.app{padding:12px}.topbar{align-items:flex-start}.top-actions{width:100%}.top-actions .btn{flex:1}.stats{gap:7px}.stat{padding:11px}.stat strong{font-size:21px}.hero{padding:20px}.panel-body{padding:13px}.result-toolbar{padding:12px}.results{padding:9px}.card-head{padding:10px}.card-content{padding:12px}.two{gap:8px}.platforms{gap:6px}.platform label{padding:9px 6px;font-size:10px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">C</div>
+    <div><h1>Clip<span>Flow</span></h1><p>YOUR IDEAS. EVERYWHERE.</p></div>
+  </div>
+  <div class="top-actions">
+    <button class="btn subtle" id="exportBtn">↓ تصدير المحتوى</button>
+    <button class="btn subtle" id="savedJump">▤ المحتوى المحفوظ</button>
+    <button class="btn primary" id="clearBtn">＋ مشروع جديد</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">✳ CONTENT STUDIO / 05 OF 100</div>
+  <h2>فكرة واحدة.<br><span class="gradient">محتوى في كل مكان.</span></h2>
+  <p>حوّل أفكارك إلى منشورات متعددة، عدّلها، انسخها، واحفظ مكتبتك الخاصة من المحتوى. مساحة عمل واحدة لصانع المحتوى والفريلانسر وصاحب المشروع.</p>
+</section>
+
+<section class="stats">
+  <div class="stat"><small>المنشورات في جلستك</small><strong id="sessionCount">0</strong></div>
+  <div class="stat"><small>المحتوى المحفوظ</small><strong id="savedCount">0</strong></div>
+  <div class="stat"><small>الأفكار التي أنشأتها</small><strong id="ideaCount">0</strong></div>
+</section>
+
+<div class="layout">
+<section class="panel left-panel">
+  <div class="panel-head"><h3>✦ مختبر الأفكار</h3><span class="pill">01 / CREATE</span></div>
+  <div class="panel-body">
+    <div class="field">
+      <label class="label" for="idea">اكتب فكرتك أو موضوعك</label>
+      <textarea id="idea" maxlength="6000" placeholder="مثال: أطلقت خدمة تصميم مواقع للشركات الصغيرة، وأساعد أصحاب المشاريع على إنشاء موقع احترافي بسعر مناسب..."></textarea>
+      <p class="helper"><span id="ideaLength">0</span> / 6000 حرف — اكتب الفكرة بلغتك الطبيعية.</p>
+    </div>
+
+    <div class="field">
+      <label class="label">اختر المنصات</label>
+      <div class="platforms">
+        <div class="platform"><input type="checkbox" id="p-facebook" value="facebook" checked><label for="p-facebook"><span>📘</span> Facebook</label></div>
+        <div class="platform"><input type="checkbox" id="p-instagram" value="instagram" checked><label for="p-instagram"><span>📸</span> Instagram</label></div>
+        <div class="platform"><input type="checkbox" id="p-linkedin" value="linkedin"><label for="p-linkedin"><span>💼</span> LinkedIn</label></div>
+        <div class="platform"><input type="checkbox" id="p-x" value="x"><label for="p-x"><span>𝕏</span> X / Twitter</label></div>
+        <div class="platform"><input type="checkbox" id="p-whatsapp" value="whatsapp"><label for="p-whatsapp"><span>💬</span> WhatsApp</label></div>
+      </div>
+    </div>
+
+    <div class="two">
+      <div class="field">
+        <label class="label" for="tone">نبرة الكتابة</label>
+        <select id="tone">
+          <option value="professional">احترافية</option>
+          <option value="friendly">ودية وقريبة</option>
+          <option value="marketing">تسويقية</option>
+          <option value="educational">تعليمية</option>
+          <option value="egyptian">مصري بسيط</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="label" for="goal">هدف المنشور</label>
+        <select id="goal">
+          <option value="engage">زيادة التفاعل</option>
+          <option value="sell">التسويق والبيع</option>
+          <option value="teach">التعليم والإفادة</option>
+          <option value="announce">الإعلان عن شيء</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="audience">الجمهور المستهدف (اختياري)</label>
+      <input id="audience" maxlength="160" placeholder="مثال: أصحاب المشاريع الناشئة">
+    </div>
+    <div class="field">
+      <label class="label" for="cta">الإجراء المطلوب (اختياري)</label>
+      <input id="cta" maxlength="200" placeholder="مثال: تواصل معي لمعرفة التفاصيل">
+    </div>
+    <button class="btn primary full" id="generateBtn">✦ أنشئ المنشورات الآن</button>
+    <p class="helper">يعمل محليًا بقوالب تحريرية. لا يرسل نصوصك إلى أي خدمة خارجية.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h3>✧ استوديو النتائج</h3><span class="pill" id="resultPill">0 POSTS</span></div>
+  <div class="result-toolbar">
+    <div class="tabs">
+      <button class="tab active" data-filter="all">الكل</button>
+      <button class="tab" data-filter="facebook">Facebook</button>
+      <button class="tab" data-filter="instagram">Instagram</button>
+      <button class="tab" data-filter="linkedin">LinkedIn</button>
+      <button class="tab" data-filter="x">X</button>
+      <button class="tab" data-filter="whatsapp">WhatsApp</button>
+    </div>
+    <button class="btn" id="copyAllBtn">نسخ الكل</button>
+  </div>
+  <div id="results" class="results">
+    <div class="empty"><div class="big">✳</div><h4>مساحة أفكارك جاهزة</h4><p>اكتب فكرة، اختر المنصات، ثم اضغط «أنشئ المنشورات الآن».</p></div>
+  </div>
+</section>
+</div>
+
+<div class="bottom-grid">
+<section class="panel" id="savedPanel">
+  <div class="panel-head"><h3>▤ مكتبة المحتوى</h3><span class="pill">LOCAL STORAGE</span></div>
+  <div class="panel-body">
+    <div class="field"><input id="searchSaved" placeholder="ابحث في المحتوى المحفوظ..."></div>
+    <div id="savedList" class="saved-list"></div>
+    <p class="helper">المحتوى محفوظ في متصفحك الحالي. استخدم التصدير للاحتفاظ بنسخة خارجية.</p>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="panel-head"><h3>⌘ نصائح سريعة</h3><span class="pill">WORK SMART</span></div>
+  <div class="panel-body" style="font-size:12px;line-height:2.2;color:var(--muted)">
+    <p><strong style="color:var(--text)">01. ابدأ بفكرة واحدة واضحة.</strong><br>كلما كانت فكرتك محددة، كانت النتيجة أسهل في التحرير.</p>
+    <p><strong style="color:var(--text)">02. راجع المحتوى قبل النشر.</strong><br>أضف تفاصيلك الحقيقية، وتأكد من صحة أي أرقام أو ادعاءات.</p>
+    <p><strong style="color:var(--text)">03. خصّص المنشور لكل منصة.</strong><br>المنشور المناسب لـ LinkedIn ليس بالضرورة مناسبًا لـ X.</p>
+    <p><strong style="color:var(--text)">04. احفظ أفضل نسخك.</strong><br>أنشئ مكتبة خاصة بأفكارك واستخدمها لتوفير الوقت.</p>
+  </div>
+</section>
+</div>
+
+<footer class="footer">CLIPFLOW · PROJECT 05 / 100<br>صُنع ليحوّل الأفكار إلى خطوات عملية.</footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const STORE = 'clipflow_saved_v1';
+let posts = [];
+let activeFilter = 'all';
+let ideaCounter = 0;
+let toastTimer;
+
+const platforms = {
+ facebook:{name:'Facebook',icon:'📘',limit:2000},
+ instagram:{name:'Instagram',icon:'📸',limit:2200},
+ linkedin:{name:'LinkedIn',icon:'💼',limit:3000},
+ x:{name:'X / Twitter',icon:'𝕏',limit:280},
+ whatsapp:{name:'WhatsApp',icon:'💬',limit:3000}
+};
+
+function toast(message){
+ $('toast').textContent=message;
+ $('toast').style.display='block';
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>$('toast').style.display='none',2400);
+}
+function readSaved(){
+ try{
+  const data=JSON.parse(localStorage.getItem(STORE)||'[]');
+  return Array.isArray(data)?data.filter(x=>x&&x.id&&typeof x.text==='string'):[];
+ }catch{return []}
+}
+function writeSaved(data){
+ try{localStorage.setItem(STORE,JSON.stringify(data));return true}
+ catch{toast('تعذر الحفظ. صدّر المحتوى قبل متابعة العمل.');return false}
+}
+function escapeHTML(s){
+ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function selectedPlatforms(){
+ return Object.keys(platforms).filter(key=>$('p-'+key).checked);
+}
+function cleanIdea(text){
+ return text.trim().replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n');
+}
+function sentences(text){
+ return text.split(/(?<=[.!؟?。])\s+|\n+/).map(s=>s.trim()).filter(Boolean);
+}
+function firstSentence(text){
+ const list=sentences(text);
+ return list[0]||text;
+}
+function makeHook(idea,goal,tone){
+ const first=firstSentence(idea);
+ if(goal==='sell')return 'بتدور على حل عملي؟ 👇\n\n'+first;
+ if(goal==='teach')return 'خلينا نتكلم عن نقطة مهمة:\n\n'+first;
+ if(goal==='announce')return 'عندي حاجة حابب أشاركها معاكم ✨\n\n'+first;
+ if(tone==='egyptian')return 'بص، في نقطة مهمة لازم نتكلم عنها 👇\n\n'+first;
+ return 'خلينا نشارك فكرة تستحق الاهتمام ✨\n\n'+first;
+}
+function ctaText(goal){
+ if(goal==='sell')return 'لو مهتم بالتفاصيل، ابعت رسالة وخلينا نتكلم.';
+ if(goal==='teach')return 'احفظ المنشور للرجوع إليه وشاركه مع شخص قد يستفيد منه.';
+ if(goal==='announce')return 'تابع التحديثات لمعرفة التفاصيل القادمة.';
+ return 'إيه رأيك؟ شاركنا وجهة نظرك في التعليقات.';
+}
+function audienceLine(audience){
+ return audience.trim()?'موجه إلى: '+audience.trim()+'.\n\n':'';
+}
+function buildPost(platform,idea,options){
+ const {tone,goal,audience,cta}=options;
+ const hook=makeHook(idea,goal,tone);
+ const call=cta.trim()||ctaText(goal);
+ const audienceText=audienceLine(audience);
+ const sentencesList=sentences(idea);
+ let text='';
+
+ if(platform==='facebook'){
+  if(tone==='educational'){
+   text='📌 فكرة تستحق أن تعرفها\n\n'+audienceText+idea+'\n\n'+call;
+  }else if(tone==='marketing'||goal==='sell'){
+   text=hook+'\n\n'+audienceText+idea+'\n\n✨ الميزة الحقيقية تبدأ من اختيار الحل المناسب.\n\n'+call;
+  }else{
+   text=hook+'\n\n'+audienceText+idea+'\n\n'+call;
+  }
+  if(goal==='engage')text+='\n\n💬 '+ 'اكتب رأيك أو تجربتك في التعليقات.';
+  if(goal==='teach')text+='\n\n💡 احتفظ بهذه الفكرة وارجع إليها وقت الحاجة.';
+ }else if(platform==='instagram'){
+  text='✨ '+firstSentence(idea)+'\n\n'+audienceText+idea+'\n\n'+call+'\n\n#أفكار #تطوير #محتوى';
+  if(goal==='sell')text+='\n#مشاريع #خدمات';
+ }else if(platform==='linkedin'){
+  const intro=tone==='friendly'?'أحب أشارككم فكرة بسيطة قد تكون مفيدة.':'من النقاط المهمة التي تستحق التفكير:';
+  text=intro+'\n\n'+audienceText+idea+'\n\n'+
+   (goal==='teach'?'ما الدرس العملي هنا؟ ابدأ بتحديد المشكلة، ثم قيّم الحل وفق احتياجك الحقيقي.':goal==='sell'?'الهدف هو تقديم قيمة واضحة وحل يناسب احتياج العميل.':'التفاصيل الصغيرة وطريقة التنفيذ قد تصنع فرقًا كبيرًا.')+
+   '\n\n'+call;
+ }else if(platform==='x'){
+  const max=platforms.x.limit;
+  text=hook.replace(/\n\n/g,' — ')+' '+idea.replace(/\s+/g,' ')+' '+call;
+  if(text.length>max){
+   const shortHook=firstSentence(idea);
+   const suffix='…';
+   const ending=' '+call;
+   const prefix=goal==='sell'?'حل عملي: ':goal==='teach'?'فكرة مفيدة: ':'فكرة تستحق النقاش: ';
+   const available=max-prefix.length-ending.length-suffix.length;
+   text=prefix+shortHook.slice(0,Math.max(0,available)).trimEnd()+suffix+ending;
+   if(text.length>max)text=text.slice(0,max);
+  }
+ }else if(platform==='whatsapp'){
+  text='السلام عليكم 👋\n\n'+(tone==='marketing'?'حابب أشاركك التفاصيل التالية:\n\n':'')+audienceText+idea+'\n\n'+call;
+ }
+
+ if(tone==='egyptian'&&platform!=='x'&&platform!=='whatsapp'){
+  text=text.replace('خلينا نشارك فكرة تستحق الاهتمام ✨','بص على الفكرة دي كده 👇');
+ }
+ return text.trim();
+}
+function createPosts(){
+ const idea=cleanIdea($('idea').value);
+ if(!idea){toast('اكتب فكرتك الأول يا معلم.');$('idea').focus();return}
+ const chosen=selectedPlatforms();
+ if(!chosen.length){toast('اختار منصة واحدة على الأقل.');return}
+ const options={
+  tone:$('tone').value,goal:$('goal').value,
+  audience:$('audience').value,cta:$('cta').value
+ };
+ posts=chosen.map((platform,index)=>({
+  id:'post-'+Date.now()+'-'+index+'-'+Math.random().toString(36).slice(2,7),
+  platform,text:buildPost(platform,idea,options),idea,
+  createdAt:new Date().toISOString(),saved:false
+ }));
+ ideaCounter++;
+ activeFilter='all';
+ document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab.dataset.filter==='all'));
+ renderPosts();
+ renderStats();
+ toast('تم إعداد '+posts.length+' منشور بقوالب محلية.');
+}
+function visiblePosts(){
+ return activeFilter==='all'?posts:posts.filter(p=>p.platform===activeFilter);
+}
+function renderPosts(){
+ const container=$('results');
+ const shown=visiblePosts();
+ $('resultPill').textContent=shown.length+' POSTS';
+ $('copyAllBtn').disabled=!shown.length;
+ if(!shown.length){
+  container.innerHTML='<div class="empty"><div class="big">✳</div><h4>لا توجد نتائج هنا</h4><p>أنشئ محتوى جديدًا أو اختر تبويبًا آخر.</p></div>';
+  return;
+ }
+ container.innerHTML='';
+ shown.forEach((post,index)=>{
+  const card=document.createElement('article');
+  card.className='result-card';
+  card.style.animationDelay=(index*.04)+'s';
+  card.innerHTML=`
+   <div class="card-head">
+    <div class="card-title"><div class="card-icon">${platforms[post.platform].icon}</div><div>${escapeHTML(platforms[post.platform].name)}<div style="font-size:10px;color:var(--muted);font-weight:500;margin-top:3px">منشور قابل للتعديل</div></div></div>
+    <div class="card-actions">
+     <button class="icon-btn" data-action="copy" data-id="${post.id}">نسخ</button>
+     <button class="icon-btn" data-action="save" data-id="${post.id}">حفظ</button>
+    </div>
+   </div>
+   <div class="card-content">
+    <textarea class="post-text" data-edit="${post.id}" aria-label="تعديل المنشور">${escapeHTML(post.text)}</textarea>
+    <div class="card-meta"><span>${platforms[post.platform].name}</span><span class="count" data-count="${post.id}">${post.text.length} / ${platforms[post.platform].limit} characters</span></div>
+   </div>`;
+  container.appendChild(card);
+ });
+}
+function updateStats(){
+ const saved=readSaved();
+ $('sessionCount').textContent=posts.length;
+ $('savedCount').textContent=saved.length;
+ $('ideaCount').textContent=ideaCounter;
+}
+function renderStats(){updateStats()}
+async function copyText(text){
+ try{
+  if(navigator.clipboard&&window.isSecureContext){
+   await navigator.clipboard.writeText(text);
+  }else{
+   const area=document.createElement('textarea');
+   area.value=text;area.style.position='fixed';area.style.opacity='0';
+   document.body.appendChild(area);area.select();
+   const ok=document.execCommand('copy');area.remove();
+   if(!ok)throw new Error('copy failed');
+  }
+  toast('تم نسخ المحتوى ✓');
+ }catch{toast('تعذر النسخ تلقائيًا؛ حدد النص وانسخه يدويًا.')}
+}
+function savePost(id){
+ const post=posts.find(p=>p.id===id);
+ if(!post)return;
+ const saved=readSaved();
+ if(saved.some(p=>p.id===post.id)){
+  toast('المنشور ده محفوظ بالفعل.');
+  return;
+ }
+ const record={...post,savedAt:new Date().toISOString()};
+ if(writeSaved([record,...saved])){
+  renderSaved();renderStats();toast('اتحفظ في مكتبتك ✓');
+ }
+}
+function renderSaved(){
+ const query=$('searchSaved').value.trim().toLowerCase();
+ const saved=readSaved().filter(p=>{
+  return !query||(p.text+' '+(p.idea||'')+' '+(platforms[p.platform]?.name||'')).toLowerCase().includes(query);
+ });
+ const container=$('savedList');
+ container.innerHTML='';
+ if(!saved.length){
+  container.innerHTML='<div class="empty" style="padding:22px 5px"><p>مكتبتك فاضية أو مفيش نتائج مطابقة.</p></div>';
+  return;
+ }
+ saved.slice(0,100).forEach(post=>{
+  const item=document.createElement('div');
+  item.className='saved-item';
+  const info=document.createElement('div');info.className='saved-info';
+  const title=document.createElement('strong');title.textContent=platforms[post.platform]?.name||'منشور';
+  const preview=document.createElement('small');preview.textContent=post.text.slice(0,75).replace(/\n/g,' ')+'…';
+  info.append(title,preview);
+  const actions=document.createElement('div');actions.className='saved-actions';
+  const copy=document.createElement('button');copy.className='mini';copy.textContent='نسخ';
+  copy.addEventListener('click',()=>copyText(post.text));
+  const remove=document.createElement('button');remove.className='mini';remove.textContent='حذف';
+  remove.addEventListener('click',()=>{
+   if(!confirm('حذف هذا المنشور من المكتبة؟'))return;
+   writeSaved(readSaved().filter(x=>x.id!==post.id));
+   renderSaved();renderStats();toast('تم الحذف.');
+  });
+  actions.append(copy,remove);item.append(info,actions);container.appendChild(item);
+ });
+}
+function exportContent(){
+ const saved=readSaved();
+ const all=[...saved,...posts.filter(p=>!saved.some(s=>s.id===p.id))];
+ if(!all.length){toast('أنشئ محتوى أو احفظ منشورًا قبل التصدير.');return}
+ const text=all.map((p,i)=>`========================================\n${i+1}. ${platforms[p.platform]?.name||p.platform}\n========================================\n${p.text}\n`).join('\n');
+ const blob=new Blob(['\uFEFF'+text],{type:'text/plain;charset=utf-8'});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement('a');a.href=url;
+ a.download='clipflow-content-'+new Date().toISOString().slice(0,10)+'.txt';
+ document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+ toast('تم تصدير المحتوى إلى ملف TXT.');
+}
+
+$('generateBtn').addEventListener('click',createPosts);
+$('idea').addEventListener('input',()=>{$('ideaLength').textContent=$('idea').value.length});
+document.querySelectorAll('.tab').forEach(tab=>tab.addEventListener('click',()=>{
+ activeFilter=tab.dataset.filter;
+ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===tab));
+ renderPosts();
+}));
+$('results').addEventListener('input',event=>{
+ const id=event.target.dataset.edit;
+ if(!id)return;
+ const post=posts.find(p=>p.id===id);
+ if(!post)return;
+ post.text=event.target.value;
+ const counter=document.querySelector(`[data-count="${id}"]`);
+ if(counter)counter.textContent=post.text.length+' / '+platforms[post.platform].limit+' characters';
+});
+$('results').addEventListener('click',event=>{
+ const button=event.target.closest('[data-action]');
+ if(!button)return;
+ const id=button.dataset.id;
+ const post=posts.find(p=>p.id===id);
+ if(!post)return;
+ if(button.dataset.action==='copy')copyText(post.text);
+ if(button.dataset.action==='save')savePost(id);
+});
+$('copyAllBtn').addEventListener('click',()=>{
+ const shown=visiblePosts();
+ if(shown.length)copyText(shown.map(p=>'--- '+platforms[p.platform].name+' ---\n'+p.text).join('\n\n'));
+});
+$('searchSaved').addEventListener('input',renderSaved);
+$('exportBtn').addEventListener('click',exportContent);
+$('savedJump').addEventListener('click',()=>$('savedPanel').scrollIntoView({behavior:'smooth',block:'start'}));
+$('clearBtn').addEventListener('click',()=>{
+ if($('idea').value.trim()&&!confirm('بدء فكرة جديدة؟ المحتوى المحفوظ لن يُحذف.'))return;
+ $('idea').value='';$('ideaLength').textContent='0';
+ $('audience').value='';$('cta').value='';
+ posts=[];activeFilter='all';
+ document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.filter==='all'));
+ renderPosts();renderStats();toast('مساحة العمل جاهزة لفكرة جديدة.');
+});
+renderSaved();
+renderStats();
+})();
+</script>
+</body>
+</html>
